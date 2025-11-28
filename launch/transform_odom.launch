@@ -3,5 +3,5 @@
         <remap from="~odom_tar" to="/OdomQuadruped" />
         <remap from="~odom_src" to="/Odometry" />
     </node>
-    <node pkg="transform_odom" type="transform_goal_node" name="transform_goal" output="screen"/>
+    <!-- <node pkg="transform_odom" type="transform_goal_node" name="transform_goal" output="screen"/> -->
 </launch>

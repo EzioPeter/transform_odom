@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   tf2_eigen
+  quadrotor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,10 +107,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES vision_to_mavros
-#  CATKIN_DEPENDS geometry_msgs mavros_msgs nav_msgs roscpp std_msgs tf tf2_eigen
-#  DEPENDS system_lib
+  #  INCLUDE_DIRS include
+  #  LIBRARIES vision_to_mavros
+  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp std_msgs tf tf2_eigen quadrotor_msgs
+  #  DEPENDS system_lib
 )
 
 ###########
