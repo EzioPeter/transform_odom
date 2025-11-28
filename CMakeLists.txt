@@ -158,6 +158,9 @@ target_link_libraries(transform_odom_node
   ${catkin_LIBRARIES}
 )
 
+add_executable(transform_goal_node src/transform_goal.cpp)
+target_link_libraries(transform_goal_node ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
