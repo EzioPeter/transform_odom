@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="transform_odom"  type="transform_odom_node" name="transform_odom" output="screen">
+        <remap from="~odom_tar" to="/OdomQuadruped" />
+        <remap from="~odom_src" to="/Odometry" />
+    </node>
+</launch>
