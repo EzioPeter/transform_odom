@@ -11,7 +11,7 @@ void odom_src_callback(const nav_msgs::Odometry::ConstPtr &msg)
 {
     if(msg->header.frame_id == "world")
     {
-        p_tar = Eigen::Vector3d(-msg->pose.pose.position.y, -msg->pose.pose.position.x, msg->pose.pose.position.z);
+        p_tar = Eigen::Vector3d(-msg->pose.pose.position.y, msg->pose.pose.position.x, msg->pose.pose.position.z);
  
         q_tar = Eigen::Quaterniond(msg->pose.pose.orientation.w, msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z);
 
@@ -27,7 +27,7 @@ void odom_src_callback(const nav_msgs::Odometry::ConstPtr &msg)
         ypr(1) = asin(2 * (q_tar.w() * q_tar.y() - q_tar.z() * q_tar.x()));
         ypr(0) = atan2(2 * (q_tar.w() * q_tar.z() + q_tar.x() * q_tar.y()), 1 - 2 * (q_tar.y() * q_tar.y() + q_tar.z() * q_tar.z()));
 
-        q_tar = Eigen::AngleAxisd(ypr(0), Eigen::Vector3d::UnitZ()) * Eigen::AngleAxisd(-ypr(2), Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(-ypr(1), Eigen::Vector3d::UnitX());
+        q_tar = Eigen::AngleAxisd(ypr(0), Eigen::Vector3d::UnitZ()) * Eigen::AngleAxisd(ypr(2), Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(-ypr(1), Eigen::Vector3d::UnitX());
     }
 }
  
