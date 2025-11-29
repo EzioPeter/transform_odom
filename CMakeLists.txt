@@ -162,6 +162,9 @@ target_link_libraries(transform_odom_node
 add_executable(transform_goal_node src/transform_goal.cpp)
 target_link_libraries(transform_goal_node ${catkin_LIBRARIES})
 
+add_executable(test_pipeline_node src/test_pipeline.cpp)
+target_link_libraries(test_pipeline_node ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
