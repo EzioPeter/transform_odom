@@ -13,8 +13,11 @@ int main(int argc, char** argv)
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<double> dist(-1.0, 1.0);
+    std::uniform_real_distribution<double> dist_lin(-0.3, 0.3);
 
     double yaw_rate = dist(gen);
+    double lin_x = dist_lin(gen);
+    double lin_y = dist_lin(gen);
     ros::Time last_change = ros::Time::now();
 
     ros::Rate rate(50); // publish at 50 Hz
@@ -24,15 +27,17 @@ int main(int argc, char** argv)
         ros::Time now = ros::Time::now();
         if ((now - last_change) >= ros::Duration(5.0)) {
             yaw_rate = dist(gen);
+            lin_x = dist_lin(gen);
+            lin_y = dist_lin(gen);
             last_change = now;
-            ROS_INFO("test_pipeline: new yaw_rate=%.3f", yaw_rate);
+            ROS_INFO("test_pipeline: new yaw_rate=%.3f, lin_x=%.3f, lin_y=%.3f", yaw_rate, lin_x, lin_y);
         }
 
         geometry_msgs::TwistStamped msg;
         msg.header.stamp = now;
         msg.header.frame_id = "quadruped";
-        msg.twist.linear.x = 0.0;
-        msg.twist.linear.y = 0.0;
+        msg.twist.linear.x = lin_x;
+        msg.twist.linear.y = lin_y;
         msg.twist.linear.z = 0.0;
 
         msg.twist.angular.x = 0.0;
