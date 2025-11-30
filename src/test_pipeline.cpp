@@ -7,7 +7,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "test_pipeline");
     ros::NodeHandle nh;
 
-    ros::Publisher pub = nh.advertise<geometry_msgs::TwistStamped>("/cmd_vel_quadruped", 10);
+    ros::Publisher pub = nh.advertise<geometry_msgs::TwistStamped>("/test_cmd_vel_quadruped", 10);
 
     // random generator for yaw rate in (-1, 1)
     std::random_device rd;
@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 
     while (ros::ok()) {
         ros::Time now = ros::Time::now();
-        if ((now - last_change) >= ros::Duration(5.0)) {
+        if ((now - last_change) >= ros::Duration(1.0)) {
             yaw_rate = dist(gen);
             lin_x = dist_lin(gen);
             lin_y = dist_lin(gen);
