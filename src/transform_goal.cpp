@@ -2,8 +2,15 @@
 #include <tf/transform_listener.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TwistStamped.h>
+#include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Vector3Stamped.h>
 #include <quadrotor_msgs/PositionCommand.h>
+#include <std_msgs/Int16.h>
+#include <atomic>
+
+using namespace std;
+
+static std::atomic<int16_t> g_go_flag{0};
 
 tf::TransformListener* listener_ptr;
 ros::Publisher cmd_vel_quadruped_pub;
@@ -92,15 +99,25 @@ void cmdCallback(const quadrotor_msgs::PositionCommand::ConstPtr& cmd_msg)
         }
     }
 
-    if (transformed) {
-        geometry_msgs::TwistStamped twist_quad;
-        twist_quad.header.stamp = ros::Time::now();
-        twist_quad.header.frame_id = "quadruped";
-        twist_quad.twist.linear = lin_quad.vector;
-        twist_quad.twist.angular = ang_quad.vector;
+    int16_t go_val = g_go_flag.load();
 
-        cmd_vel_quadruped_pub.publish(twist_quad);
+    if (transformed && go_val) {
+        geometry_msgs::Twist twist_msg;
+        twist_msg.linear = lin_quad.vector;
+        twist_msg.angular = ang_quad.vector;
+        // enforce zero for z linear and x/y angular components
+        twist_msg.linear.z = 0.0;
+        twist_msg.angular.x = 0.0;
+        twist_msg.angular.y = 0.0;
+
+        cmd_vel_quadruped_pub.publish(twist_msg);
     }
+}
+
+void goFlagCallback(const std_msgs::Int16::ConstPtr &msg)
+{
+    g_go_flag.store(msg->data);
+    ROS_DEBUG("Received go_flag = %d", msg->data);
 }
 
 int main(int argc, char** argv)
@@ -112,8 +129,9 @@ int main(int argc, char** argv)
     listener_ptr = &listener;
 
     ros::Subscriber goal_sub = nh.subscribe("/move_base_simple/goal", 10, goalCallback);
-    cmd_vel_quadruped_pub = nh.advertise<geometry_msgs::TwistStamped>("/cmd_vel_quadruped", 10);
+    cmd_vel_quadruped_pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel_quadruped", 10);
     ros::Subscriber cmd_sub = nh.subscribe<quadrotor_msgs::PositionCommand>("/planning/pos_cmd", 10, cmdCallback);
+    ros::Subscriber go_flag_sub = nh.subscribe<std_msgs::Int16>("/ego_planner_node/go_flag", 10, goFlagCallback);
     // also subscribe to planner's pos_cmd in case planner publishes there
     // ros::Subscriber cmd_sub2 = nh.subscribe<quadrotor_msgs::PositionCommand>("/planning/pos_cmd", 10, cmdCallback);
 
