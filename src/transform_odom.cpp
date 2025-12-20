@@ -45,18 +45,32 @@ int main(int argc, char **argv)
     ros::Rate rate(100.0);
  
     ros::Time last_request = ros::Time::now();
+
+    // TF listener to query world -> quadruped transform
+    tf::TransformListener tf_listener;
  
     while(ros::ok()){
         nav_msgs::Odometry odom_tar;
 
-        odom_tar.pose.pose.position.x = pos[0];
-        odom_tar.pose.pose.position.y = pos[1];
-        odom_tar.pose.pose.position.z = pos[2];
+        // Try to obtain current pose of quadruped in world using TF
+        tf::StampedTransform tf_w_q;
+        try {
+            tf_listener.lookupTransform("world", "quadruped", ros::Time(0), tf_w_q);
 
-        odom_tar.pose.pose.orientation.x = quaternion.x();
-        odom_tar.pose.pose.orientation.y = quaternion.y();
-        odom_tar.pose.pose.orientation.z = quaternion.z();
-        odom_tar.pose.pose.orientation.w = quaternion.w();
+            const tf::Vector3 p = tf_w_q.getOrigin();
+            const tf::Quaternion q = tf_w_q.getRotation();
+
+            odom_tar.pose.pose.position.x = p.x();
+            odom_tar.pose.pose.position.y = p.y();
+            odom_tar.pose.pose.position.z = p.z();
+
+            odom_tar.pose.pose.orientation.x = q.x();
+            odom_tar.pose.pose.orientation.y = q.y();
+            odom_tar.pose.pose.orientation.z = q.z();
+            odom_tar.pose.pose.orientation.w = q.w();
+        } catch (tf::TransformException &ex) {
+            ROS_WARN_THROTTLE(5.0, "TF lookup world->quadruped failed: %s", ex.what());
+        }
 
         // copy velocity from the latest received odom_src
         odom_tar.twist.twist = saved_twist;
