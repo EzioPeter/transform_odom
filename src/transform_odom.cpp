@@ -18,9 +18,9 @@ void odom_src_callback(const nav_msgs::Odometry::ConstPtr &msg)
         pos = Eigen::Vector3d(0.0, 0.0, 0.0);
  
         quaternion = Eigen::Quaterniond(1.0, 0.0, 0.0, 0.0);
-        Eigen::Quaterniond rot_y(Eigen::AngleAxisd(-M_PI/12, Eigen::Vector3d::UnitY()));
-        quaternion = rot_y * quaternion;
-        // save incoming velocity so we can forward it in odom_tar
+        // Eigen::Quaterniond rot_y(Eigen::AngleAxisd(-M_PI/12, Eigen::Vector3d::UnitY()));
+        // quaternion = rot_y * quaternion;
+        // // save incoming velocity so we can forward it in odom_tar
         saved_twist = msg->twist.twist;
         static tf::TransformBroadcaster br;
         tf::Transform transform;
