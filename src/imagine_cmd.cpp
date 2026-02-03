@@ -27,15 +27,6 @@ void imagine_src_callback(const geometry_msgs::PoseStamped::ConstPtr &msg)
 
             pose_world_msg.header.stamp = ros::Time::now();
             pose_world_msg.header.frame_id = "world";
-
-            // imagine_tar_world.pose.pose.position.x = pose_world_msg.pose.position.x;
-            // imagine_tar_world.pose.pose.position.y = pose_world_msg.pose.position.y;
-            // imagine_tar_world.pose.pose.position.z = pose_world_msg.pose.position.z;
-            // imagine_tar_world.pose.pose.orientation.x = pose_world_msg.pose.orientation.x;
-            // imagine_tar_world.pose.pose.orientation.y = pose_world_msg.pose.orientation.y;
-            // imagine_tar_world.pose.pose.orientation.z = pose_world_msg.pose.orientation.z;
-            // imagine_tar_world.pose.pose.orientation.w = pose_world_msg.pose.orientation.w;
-
             imagine_tar_pub.publish(pose_world_msg);
         }
     }
