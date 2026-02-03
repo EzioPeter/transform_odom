@@ -27,3 +27,5 @@ include_directories(
 add_executable(transform_goal_node src/transform_goal.cpp)
 target_link_libraries(transform_goal_node ${catkin_LIBRARIES})
 
+add_executable(imagine_cmd_node src/imagine_cmd.cpp)
+target_link_libraries(imagine_cmd_node ${catkin_LIBRARIES})

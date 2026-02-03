@@ -4,4 +4,8 @@
         <remap from="~odom_src" to="/Odometry" />
     </node> -->
     <node pkg="transform_odom" type="transform_goal_node" name="transform_goal" output="screen"/>
+    <node pkg="transform_odom"  type="imagine_cmd_node" name="imagine_cmd" output="screen">
+        <remap from="~imagine_tar" to="/move_base_simple/goal" />
+        <remap from="~imagine_src" to="/imagine_cmd" />
+    </node>
 </launch>
